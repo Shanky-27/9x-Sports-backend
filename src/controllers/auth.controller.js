@@ -1,5 +1,7 @@
 import supabase from "../config/supabase.js";
-
+import dotenv from "dotenv";
+dotenv.config();
+const FRONTEND_URL = process.env.FRONTEND_URL;
 // Register
 export const register = async (req, res) => {
   try {
@@ -12,7 +14,7 @@ export const register = async (req, res) => {
       email,
       password,
         options: {
-    emailRedirectTo: "http://localhost:3000/auth/callback"
+    emailRedirectTo: `${FRONTEND_URL}/auth/callback`
   }
     });
 
@@ -99,7 +101,7 @@ export const forgotPassword = async (req, res) => {
     console.log("Email:", email);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:3000/auth/reset-password",
+      redirectTo: `${FRONTEND_URL}/auth/reset-password`,
     });
 
     if (error) {
