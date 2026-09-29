@@ -463,7 +463,7 @@ let paymentSuccessful = false;
             ------------------------------------------
             */
 
-            try {
+     try {
     await sendOrderEmail(savedOrder);
 
     console.log("ORDER EMAIL SENT");
@@ -474,10 +474,8 @@ let paymentSuccessful = false;
         "ORDER EMAIL FAILED:",
         emailError
     );
-
-    // Email failure should NOT fail
-    // an already-paid/created order.
 }
+
 
 
 
