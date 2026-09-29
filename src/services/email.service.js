@@ -1,19 +1,20 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import dns from "dns";
 
 dotenv.config();
-
+dns.setDefaultResultOrder("ipv4first");
 
 const transporter = nodemailer.createTransport({
-
-    service:"gmail",
-
-    auth:{
-        user:process.env.EMAIL_USER,
-        pass:process.env.EMAIL_PASSWORD
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
     }
-
 });
+export default transporter;
 
 
 export const sendOrderEmail = async(order)=>{

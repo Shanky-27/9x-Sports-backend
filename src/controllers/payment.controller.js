@@ -463,14 +463,22 @@ let paymentSuccessful = false;
             ------------------------------------------
             */
 
-            await sendOrderEmail(
-                savedOrder
-            );
+            try {
+    await sendOrderEmail(savedOrder);
 
+    console.log("ORDER EMAIL SENT");
 
-            console.log(
-                "ORDER EMAIL SENT"
-            );
+} catch (emailError) {
+
+    console.error(
+        "ORDER EMAIL FAILED:",
+        emailError
+    );
+
+    // Email failure should NOT fail
+    // an already-paid/created order.
+}
+
 
 
             /*
