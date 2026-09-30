@@ -8,14 +8,24 @@ dns.setDefaultResultOrder("ipv4first");
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
+    port: 465,
+    secure: true,
     family: 4,
 
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 30000,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
     },
+});
+transporter.verify((error, success) => {
+    if (error) {
+        console.error("❌ SMTP VERIFY FAILED:", error);
+    } else {
+        console.log("✅ SMTP READY:", success);
+    }
 });
 
 export default transporter;
