@@ -1,17 +1,9 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 export const sendOrderEmail = async(order)=>{
 const trackingUrl = `${process.env.FRONTEND_URL}/tracking/${order.awb}`;
  const products =
@@ -1508,9 +1500,11 @@ Designed in India &nbsp;•&nbsp; Made for Champions
 };
 
 export const sendNewsletterWelcomeEmail = async (email) => {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to: email,
+  const { data, error } = await resend.emails.send({
+    from: "NX Sports <onboarding@resend.dev>",
+
+    to: [email],
+
     subject: "Welcome to NX — You're In ⚡",
 
     html: `<!DOCTYPE html>
@@ -2252,10 +2246,11 @@ export const sendNewsletterWelcomeEmail = async (email) => {
 </body>
 </html>
     `
-  };
- const info = await transporter.sendMail(mailOptions);
+  });
+   if (error) {
+    console.error("Newsletter email error:", error);
+    throw new Error(error.message || "Failed to send newsletter email");
+  }
 
-  console.log("Newsletter email sent:", info.messageId);
-
-  return info;
+  console.log("Newsletter email sent:", data.id);
 };
