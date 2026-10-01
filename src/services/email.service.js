@@ -20,12 +20,10 @@ const trackingUrl = `${process.env.FRONTEND_URL}/tracking/${order.awb}`;
             size: "-",
             qty: 1
         };
-    const mailOptions = {
+  const { data, error } = await resend.emails.send({
+    from: "NX Sports <onboarding@resend.dev>",
 
-        from: process.env.EMAIL_USER,
-
-        to: order.customer_email,
-
+    to: [email],
         subject:"Order Confirmation - Your Order Has Been Placed",
 
         html: `<!DOCTYPE html>
@@ -1492,10 +1490,14 @@ Designed in India &nbsp;•&nbsp; Made for Champions
 </body>
 </html>
 `
-    };
+    });
 
+  if (error) {
+    console.error("Newsletter email error:", error);
+    throw new Error(error.message || "Failed to send newsletter email");
+  }
 
-    await transporter.sendMail(mailOptions);
+  console.log("Newsletter email sent:", data.id);
 
 };
 
