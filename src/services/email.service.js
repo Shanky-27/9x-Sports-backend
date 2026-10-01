@@ -3,16 +3,14 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
 const transporter = nodemailer.createTransport({
-
-    service:"gmail",
-
-    auth:{
-        user:process.env.EMAIL_USER,
-        pass:process.env.EMAIL_PASSWORD
-    }
-
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
 });
 export const sendOrderEmail = async(order)=>{
 const trackingUrl = `${process.env.FRONTEND_URL}/tracking/${order.awb}`;
@@ -2255,6 +2253,9 @@ export const sendNewsletterWelcomeEmail = async (email) => {
 </html>
     `
   };
+ const info = await transporter.sendMail(mailOptions);
 
-  await transporter.sendMail(mailOptions);
+  console.log("Newsletter email sent:", info.messageId);
+
+  return info;
 };
