@@ -23,7 +23,7 @@ const trackingUrl = `${process.env.FRONTEND_URL}/tracking/${order.awb}`;
   const { data, error } = await resend.emails.send({
     from: "NX Sports <onboarding@resend.dev>",
 
-    to: [email],
+    to: [order.customer_email],
         subject:"Order Confirmation - Your Order Has Been Placed",
 
         html: `<!DOCTYPE html>
