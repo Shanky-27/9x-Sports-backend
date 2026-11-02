@@ -63,6 +63,12 @@ export const getRazorpayPayment = async (
     );
 
 };
-
+export const captureRazorpayPayment = async (paymentId, amount) => {
+    return await razorpay.payments.capture(
+        paymentId,
+        amount,
+        "INR"
+    );
+};
 
 export default razorpay;
