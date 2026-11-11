@@ -147,10 +147,23 @@ export const getBestShippingRate = async (payload) => {
         ).values()
     ];
 
-    // Step 2: Calculate rate for every carrier
+    // Step 3: EXCLUDE DELHIVERY
+    const eligibleCarriers = uniqueCarriers.filter(carrier => {
+        const name = String(carrier.carrierName || "").toLowerCase().trim();
+
+        return !name.includes("delhivery");
+    });
+
+    if (!eligibleCarriers.length) {
+        throw new Error("No non-Delhivery courier partner available.");
+    }
+    console.log(
+        "AVAILABLE COURIERS:",
+        eligibleCarriers.map(c => c.carrierName)
+    );
     const responses = await Promise.allSettled(
 
-        uniqueCarriers.map(async (carrier) => {
+        eligibleCarriers.map(async (carrier) => {
 
             const body = {
                 ...payload,
@@ -159,8 +172,9 @@ export const getBestShippingRate = async (payload) => {
 
             const result = await calculateRate(body);
 
-            if (!result.data || !result.data.length)
+            if (!result.data || !result.data.length) {
                 return null;
+            }
 
             const rate = result.data[0];
 
@@ -201,6 +215,9 @@ export const getBestShippingRate = async (payload) => {
         .map(item => item.value)
         .filter(Boolean);
 
+    if (!availableRates.length) {
+        throw new Error("No eligible courier rates available.");
+    }
     availableRates.sort((a, b) => a.total - b.total);
 
     return {
@@ -208,7 +225,7 @@ export const getBestShippingRate = async (payload) => {
         pickup: serviceability.pickup,
         delivery: serviceability.delivery,
 
-        recommended: availableRates[0] || null,
+        recommended: availableRates[0],
 
         allRates: availableRates
 
