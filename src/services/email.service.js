@@ -137,7 +137,7 @@ background:#060608;
 ">
 
 <img
-src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/l.png"
+src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/ll.png"
 width="180"
 style="display:block; margin:0 auto;"
 >
@@ -1284,7 +1284,7 @@ cellspacing="0">
 valign="top">
 
 <img class="l"
-src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/l.png"
+src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/ll.png"
 height="75"
 >
 
@@ -1609,7 +1609,7 @@ export const sendNewsletterWelcomeEmail = async (email) => {
 
 <img
   class="logo"
-  src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/l.png"
+  src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/ll.png"
   width="170"
   alt="NX Sports Gear"
   style="
