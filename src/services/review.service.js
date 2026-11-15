@@ -191,10 +191,20 @@ export const submitProductReview = async (token, input) => {
     };
 };
 
+
 export const getPublicReviews = async () => {
     const { data, error } = await supabase
         .from("reviews")
-        .select("id, product_id, product_name, product_image, rating, comment, created_at")
+        .select(`
+            id,
+            product_id,
+            product_name,
+            product_image,
+            customer_name,
+            rating,
+            comment,
+            created_at
+        `)
         .eq("is_approved", true)
         .order("created_at", { ascending: false })
         .limit(100);
@@ -203,3 +213,4 @@ export const getPublicReviews = async () => {
 
     return data || [];
 };
+
