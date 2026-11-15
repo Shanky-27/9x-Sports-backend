@@ -7,7 +7,9 @@ import orderRoutes from "./routes/order.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import newsletterRoutes from "./routes/newsletter.routes.js";
 import inventoryRoutes from "./routes/inventory.routes.js";
-
+import reviewRoutes from "./routes/review.routes.js";
+import cron from "node-cron";
+import { checkPendingDeliveries } from "./services/delivery-checker.service.js";
 
 dotenv.config();
 
@@ -23,7 +25,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/inventory", inventoryRoutes);
-
+app.use("/api/reviews", reviewRoutes);
 app.get("/", (req, res) => {
   res.send("Backend running...");
 });
@@ -33,3 +35,29 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+let deliveryCheckRunning = false;
+
+cron.schedule(
+    "0 * * * *",
+    async () => {
+        if (deliveryCheckRunning) {
+            console.log("Previous delivery check is still running. Skipping.");
+            return;
+        }
+
+        deliveryCheckRunning = true;
+
+        try {
+            await checkPendingDeliveries();
+        } catch (error) {
+            console.error("Hourly delivery checker failed:", error);
+        } finally {
+            deliveryCheckRunning = false;
+        }
+    },
+    {
+        timezone: "Asia/Kolkata"
+    }
+);
+
+console.log("Hourly ShipLive delivery checker scheduled.");

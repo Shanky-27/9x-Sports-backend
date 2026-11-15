@@ -2256,3 +2256,77 @@ export const sendNewsletterWelcomeEmail = async (email) => {
 
   console.log("Newsletter email sent:", data.id);
 };
+
+
+
+
+export const sendReviewEmail = async (order, reviewUrl) => {
+    const safeName = String(order.customer_name || "Customer")
+        .replace(/[&<>"']/g, char => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[char]);
+
+    const { data, error } = await resend.emails.send({
+        from: "NX Sports <support@nxsportsgear.com>",
+        to: [order.customer_email],
+        subject: "Your NX order has arrived! Share your experience ⭐",
+        html: `
+        <!DOCTYPE html>
+        <html>
+        <body style="margin:0;background:#050505;color:#fff;font-family:Arial,sans-serif;padding:30px 15px;">
+            <div style="max-width:560px;margin:auto;background:#101014;border:1px solid #302044;border-radius:12px;padding:32px 24px;text-align:center;">
+                <img
+                    src="https://vhjphwsbneabpsoxyxti.supabase.co/storage/v1/object/public/logos/ll.png"
+                    width="150"
+                    alt="NX Sports Gear"
+                    style="margin-bottom:24px;"
+                />
+
+                <h1 style="font-size:25px;color:#fff;">
+                    Your order has arrived!
+                </h1>
+
+                <p style="color:#ccc;font-size:15px;line-height:25px;">
+                    Hi ${safeName},<br/><br/>
+                    We hope you're enjoying your NX Sports Gear purchase!
+                    We'd love to hear what you think.
+                </p>
+
+                <p style="color:#aaa;font-size:13px;">
+                    Order: ${String(order.order_reference || "")}
+                </p>
+
+                <a
+                    href="${reviewUrl}"
+                    style="display:inline-block;background:#873ee8;color:#fff;text-decoration:none;padding:15px 28px;border-radius:7px;font-weight:bold;margin:20px 0;"
+                >
+                    WRITE YOUR REVIEW
+                </a>
+
+                <p style="color:#888;font-size:12px;line-height:20px;">
+                    Your feedback helps other customers make better choices.
+                    This review link is personal and expires in 7 days.
+                </p>
+
+                <p style="color:#aaa;font-size:13px;margin-top:28px;">
+                    Thank you for choosing NX Sports Gear.
+                </p>
+            </div>
+        </body>
+        </html>
+        `
+    });
+
+    if (error) {
+        console.error("Review email error:", error);
+        throw new Error(error.message || "Failed to send review email");
+    }
+
+    console.log("Review invitation email sent:", data?.id);
+
+    return data;
+};
