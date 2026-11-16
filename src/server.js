@@ -10,7 +10,7 @@ import inventoryRoutes from "./routes/inventory.routes.js";
 import reviewRoutes from "./routes/review.routes.js";
 import cron from "node-cron";
 import { checkPendingDeliveries } from "./services/delivery-checker.service.js";
-
+import adminRoutes from "./routes/admin.routes.js";
 dotenv.config();
 
 
@@ -26,6 +26,7 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/admin", adminRoutes);
 app.get("/", (req, res) => {
   res.send("Backend running...");
 });

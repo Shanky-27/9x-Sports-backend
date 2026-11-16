@@ -40,6 +40,8 @@ export const createShipment = async (req, res) => {
 
             pincode: req.body.delivery.pincode,
 
+            product_details: req.body.cart || [],
+
             invoice_value: req.body.shipment.invoiceVal,
 
             payment_mode: shipment.paymentMode,
